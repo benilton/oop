@@ -10,8 +10,21 @@ oop
 ```R
 source('bigRMA.R')
 library(oligo)
+
+## Load parallel back-end, if wanted
+library(doMC)
+registerDoMC(4)
+
+## get the CEL files
 celFiles = list.celfiles()
-results = bigRMA(celFiles, pkgname='pd.huex.1.0.st.v2', target='core')
+
+## run bigRMA
+## note that the 'resultBigRMA.h5' file may be very large
+## and its size is linearly associated with the size of the
+## dataset (ie, it grows with sample size). Try to use a
+## local disk
+results = bigRMA(celFiles, pkgname='pd.huex.1.0.st.v2',
+                 target='core', h5fname='resultBigRMA.h5')
 
 ## The line below assumes you have RAM to keep all the results at once
 rmaResults = results$h5container$rmaSummaries[,]
